@@ -64,7 +64,7 @@ int main(int argc, char *argv[]) {
 
     romfile = "/switch/roms/rom.gbc";
     sgb = false;
-    audio = false;
+    audio = true;
 
     if(romfile == "") {
         usage(argv);
@@ -80,7 +80,7 @@ int main(int argc, char *argv[]) {
         fprintf(stderr,"Couldn't initialize SDL: %s\n--nosound would disable audio, --headless would disable video. Those might be worth a try, depending on the above error message.\n", SDL_GetError());
     }
 */
-    SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER);
+    SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER|SDL_INIT_AUDIO);
     consoleInit(NULL);
     romfsInit();
 
