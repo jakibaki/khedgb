@@ -244,7 +244,7 @@ rom::~rom() {
 }
 
 void rom::save() {
-    printf("Saving!\n");
+    printf("\rSaving!                         ");
     if(h.has_bat && cram.size() > 0) {
         std::ofstream outfile(filename.substr(0, filename.find_last_of(".")+1)+"sav");
         if(outfile.is_open()) {

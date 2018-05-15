@@ -197,7 +197,6 @@ bool reinit_sdl_screen(SDL_Window ** screen, SDL_Renderer ** renderer, SDL_Textu
     SDL_InitSubSystem(SDL_INIT_JOYSTICK);
     SDL_JoystickEventState(SDL_ENABLE);
     SDL_JoystickOpen(0);
-
     return true;
 }
 

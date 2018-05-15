@@ -101,9 +101,9 @@ apu::apu() : writes_enabled(false), cycle(0), devid(0), audio_open(false), debug
     unsigned int chosen_driver = 255;
     unsigned int driver_desirability = 255;
     std::array<std::array<const char, 20>, 6> desired_drivers = {"directsound", "winmm", "pulse", "pulseaudio", "alsa", "switch"};
-    printf("Audio Drivers: \n");
+    //printf("Audio Drivers: \n");
     for(int i=0; i<num_drivers;i++) {
-        printf("\tDriver %d: \"%s\"\n", i, SDL_GetAudioDriver(i));
+        //printf("\tDriver %d: \"%s\"\n", i, SDL_GetAudioDriver(i));
         for(unsigned int j=0;j<desired_drivers.size();j++) {
             if(strncmp((desired_drivers[j].data()), SDL_GetAudioDriver(i), 20) == 0 && j < driver_desirability) {
                 chosen_driver = i;
@@ -113,7 +113,7 @@ apu::apu() : writes_enabled(false), cycle(0), devid(0), audio_open(false), debug
     }
 
     if(chosen_driver != 255) {
-        printf("Chose driver: #%d (%s)\n", chosen_driver, SDL_GetAudioDriver(chosen_driver));
+        //printf("Chose driver: #%d (%s)\n", chosen_driver, SDL_GetAudioDriver(chosen_driver));
 
         int failure_code = SDL_AudioInit(SDL_GetAudioDriver(chosen_driver));
         if(failure_code) {
@@ -121,9 +121,9 @@ apu::apu() : writes_enabled(false), cycle(0), devid(0), audio_open(false), debug
         }
 
         int num_playback_devices = SDL_GetNumAudioDevices(0);
-        printf("Audio Devices: \n\tPlayback:\n");
+        //printf("Audio Devices: \n\tPlayback:\n");
         for(int i=0; i<num_playback_devices;i++) {
-            printf("\t\tDevice %d: %s\n", i, SDL_GetAudioDeviceName(i,0));
+            //printf("\t\tDevice %d: %s\n", i, SDL_GetAudioDeviceName(i,0));
             if(!devid) {
                 SDL_AudioSpec want;
                     want.freq=44100;
@@ -141,7 +141,7 @@ apu::apu() : writes_enabled(false), cycle(0), devid(0), audio_open(false), debug
                     fprintf(stderr, "Error opening device %s: %s\n", SDL_GetAudioDeviceName(i,0), SDL_GetError());
                 }
                 else {
-                    printf("Freq: %d format: %d (%d) ch: %d sil: %d samp: %d size: %d\n", got.freq, got.format, want.format, got.channels, got.silence, got.samples, got.size);
+                    //printf("Freq: %d format: %d (%d) ch: %d sil: %d samp: %d size: %d\n", got.freq, got.format, want.format, got.channels, got.silence, got.samples, got.size);
                 }
             }
         }
