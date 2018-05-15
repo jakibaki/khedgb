@@ -12,7 +12,7 @@ void usage(char ** argv);
 
 int main(int argc, char *argv[]) {
     bool sgb = false;
-    bool cgb = false;
+    bool cgb = true;
     bool cpu_trace = false;
     bool headless = false;
     bool audio = true;
@@ -62,7 +62,7 @@ int main(int argc, char *argv[]) {
     }*/
 
 
-    romfile = "roms/rom.gbc";
+    romfile = "/switch/roms/rom.gbc";
     sgb = false;
     audio = false;
 
