@@ -36,7 +36,7 @@ uint8_t printer::send(uint8_t incoming) {
                 //printf(", received known command %d, ", command);
             }
             else {
-                printf(", received unknown command %d, ", command);
+                //printf(", received unknown command %d, ", command);
             }
             state = COMPRESS;
             break;
@@ -129,7 +129,7 @@ uint8_t printer::send(uint8_t incoming) {
 }
 
 void printer::print_buffer() {
-    printf("Printer received %d tiles (%d bytes), for an image 160x%d pixels in size:\n", graphics_ptr/16, graphics_ptr, graphics_ptr/40);
+    //printf("\rPrinter received %d tiles (%d bytes), for an image 160x%d pixels in size:", graphics_ptr/16, graphics_ptr, graphics_ptr/40);
     Vect<uint8_t> output(160*graphics_ptr/40, 0);
     for(int tile=0;tile<graphics_ptr/16;tile++) {
         int tile_x = tile % 20;
@@ -156,5 +156,5 @@ void printer::print_buffer() {
     */
     std::string filename = std::to_string(SDL_GetTicks()) + ".png";
     util::output_png(filename, 160,graphics_ptr/40, output);
-    printf("Output printer image to %s.\n", filename.c_str());
+    //printf("\rOutput printer image to %s.                                                ", filename.c_str());
 }
