@@ -21,7 +21,10 @@
 #define JOY_UP    13
 #define JOY_RIGHT 14
 #define JOY_DOWN  15
-
+#define JOY_LSTICK_LEFT 16
+#define JOY_LSTICK_UP 17
+#define JOY_LSTICK_RIGHT 18
+#define JOY_LSTICK_DOWN 19
 
 const unsigned int memmap::timer_clock_select[4] = {
       256, //4096Hz
@@ -554,10 +557,18 @@ void memmap::keydown(Uint8 k) {
     bool changed = false;
 
     switch(k) {
+        case JOY_LSTICK_UP:
+            if(!directions[0].up && !(joypad & 0x10)) changed = true;
+            directions[0].up=1;
+            break;
         case JOY_UP:
             if(!directions[0].up && !(joypad & 0x10)) changed = true;
             directions[0].up=1;
             break;
+        case JOY_LSTICK_LEFT:
+            if(!directions[0].left && !(joypad & 0x10)) changed = true;
+            directions[0].left=1;
+            break;        
         case JOY_LEFT:
             if(!directions[0].left && !(joypad & 0x10)) changed = true;
             directions[0].left=1;
@@ -566,7 +577,15 @@ void memmap::keydown(Uint8 k) {
             if(!directions[0].down && !(joypad & 0x10)) changed = true;
             directions[0].down=1;
             break;
+        case JOY_LSTICK_DOWN:
+            if(!directions[0].down && !(joypad & 0x10)) changed = true;
+            directions[0].down=1;
+            break;
         case JOY_RIGHT:
+            if(!directions[0].right && !(joypad & 0x10)) changed = true;
+            directions[0].right=1;
+            break;
+        case JOY_LSTICK_RIGHT:
             if(!directions[0].right && !(joypad & 0x10)) changed = true;
             directions[0].right=1;
             break;
@@ -601,13 +620,25 @@ void memmap::keyup(Uint8 k) {
         case JOY_UP:
             directions[0].up=0;
             break;
+        case JOY_LSTICK_UP:
+            directions[0].up=0;
+            break;
         case JOY_LEFT:
+            directions[0].left=0;
+            break;
+        case JOY_LSTICK_LEFT:
             directions[0].left=0;
             break;
         case JOY_DOWN:
             directions[0].down=0;
             break;
+        case JOY_LSTICK_DOWN:
+            directions[0].down=0;
+            break;
         case JOY_RIGHT:
+            directions[0].right=0;
+            break;
+        case JOY_LSTICK_RIGHT:
             directions[0].right=0;
             break;
         case JOY_MINUS:

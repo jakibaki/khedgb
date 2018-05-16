@@ -26,6 +26,10 @@
 #define JOY_UP    13
 #define JOY_RIGHT 14
 #define JOY_DOWN  15
+#define JOY_LSTICK_LEFT 16
+#define JOY_LSTICK_UP 17
+#define JOY_LSTICK_RIGHT 18
+#define JOY_LSTICK_DOWN 19
 #define LIM 2000
 
 namespace util {
@@ -34,10 +38,6 @@ bool process_events(cpu * proc, memmap * bus) {
     SDL_Event event;
     unsigned int newx,newy;
 
-    bool upKeyActive = false;
-    bool downKeyActive = false;
-    bool leftKeyActive = false;
-    bool rightKeyActive = false; 
     while(SDL_PollEvent(&event)) {
         switch(event.type) {
             
@@ -50,10 +50,6 @@ bool process_events(cpu * proc, memmap * bus) {
                 //printf("util::Keyup\n"); 
                 bus->keyup(event.jbutton.button);
                 break;
-            case SDL_JOYAXISMOTION:
-                //event.jaxis.axis
-                break;
-
             case SDL_WINDOWEVENT:
                 //printf("util::Window event: ");
                 switch(event.window.event) {
