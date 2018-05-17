@@ -3,6 +3,7 @@
 #include "rom.h"
 #include "util.h"
 #include<SDL2/SDL.h>
+#include<switch.h>
 
 #include<iostream>
 #include<fstream>
@@ -157,10 +158,12 @@ bool reinit_sdl_screen(SDL_Window ** screen, SDL_Renderer ** renderer, SDL_Textu
     //                           SDL_WINDOW_RESIZABLE);
     //*screen = SDL_CreateWindow("sdl2+mixer+image demo", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_W, SCREEN_H, SDL_WINDOW_SHOWN);
     //*screen = SDL_CreateWindow("sdl2+mixer+image demo", SDL_WINDOWPOS_CENTERED, xres, yres, SDL_WINDOW_SHOWN, SDL_WINDOW_FULLSCREEN);
+    //*screen = SDL_CreateWindow("sdl2+mixer+image demo", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, xres, yres, SDL_WINDOW_SHOWN);
+
     *screen = SDL_CreateWindow(NULL, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, xres*2, yres*2, SDL_WINDOW_FULLSCREEN);
+    //*screen = SDL_CreateWindow(NULL, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_H/2, (SCREEN_H/2 * yres)/xres, SDL_WINDOW_FULLSCREEN);
     
     if ( *screen == NULL ) {
-        fprintf(stderr, "lcd::Couldn't set %dx%dx32 video mode: %s\nStarting without video output.\n", xres*2, yres*2, SDL_GetError());
         return false;
     }
 

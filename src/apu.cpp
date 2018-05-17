@@ -130,7 +130,7 @@ apu::apu() : writes_enabled(false), cycle(0), devid(0), audio_open(false), debug
                     want.format=AUDIO_S8;
                     want.channels=CHANNELS;
                     want.silence=0;
-                    want.samples=/*8192*/ 689;
+                    want.samples=689; //1200; /*8192*/ //689;
                     want.size=0;
                     want.callback=NULL;
                     want.userdata=NULL;

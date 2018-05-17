@@ -6,9 +6,102 @@
 #include "cpu.h"
 #include "lcd.h"
 #include "util.h"
+#include <dirent.h>
 #include <switch.h>
 
 void usage(char ** argv);
+
+
+int getInd(char* curFile, int curIndex) {
+    DIR* dir;
+    struct dirent* ent;
+
+
+    if(curIndex < 0)
+        curIndex = 0;
+    
+    dir = opendir("/switch/roms");//Open current-working-directory.
+    if(dir==NULL)
+    {
+        sprintf(curFile, "Failed to open dir!");
+        return curIndex;
+    }
+    else
+    {
+        int i;
+        for(i = 0; i <= curIndex; i++) {
+            ent = readdir(dir);
+        }
+        if(ent)
+            sprintf(curFile ,"/switch/roms/%s", ent->d_name);
+        else
+            curIndex--;
+        closedir(dir);
+    }
+    return curIndex;
+}
+
+void getFile(char* curFile)
+{
+ 
+    gfxInitDefault();
+
+    //Initialize console. Using NULL as the second argument tells the console library to use the internal console structure as current one.
+    consoleInit(NULL);
+
+    //Move the cursor to row 16 and column 20 and then prints "Hello World!"
+    //To move the cursor you have to print "\x1b[r;cH", where r and c are respectively
+    //the row and column where you want your cursor to move
+    printf("\x1b[16;20HSelect a file using the up and down keys.");
+    printf("\x1b[17;20HPress start to run the rom.");
+
+    sprintf(curFile, "Couldn't find any files in that folder!");
+    int curIndex = 0;
+
+    curIndex = getInd(curFile, curIndex);
+    printf("\x1b[18;20H%s", curFile);
+    while(appletMainLoop())
+    {
+        //Scan all the inputs. This should be done once for each frame
+        hidScanInput();
+
+        //hidKeysDown returns information about which buttons have been just pressed (and they weren't in the previous frame)
+        u64 kDown = hidKeysDown(CONTROLLER_P1_AUTO);
+
+        if (kDown & KEY_DOWN || kDown & KEY_DDOWN) {
+            consoleClear();
+            printf("\x1b[16;20HSelect a file using the up and down keys.");
+            printf("\x1b[17;20HPress start to run the rom.");
+            curIndex++;
+            curIndex = getInd(curFile, curIndex);
+            printf("\x1b[18;20H%s", curFile);
+        }
+
+        if (kDown & KEY_UP || kDown & KEY_DUP) {
+            consoleClear();
+            printf("\x1b[16;20HSelect a file using the up and down keys.");
+            printf("\x1b[17;20HPress start to run the rom.");
+            curIndex--;
+            curIndex = getInd(curFile, curIndex);
+            printf("\x1b[18;20H%s", curFile);
+        }
+
+
+        if (kDown & KEY_PLUS || kDown & KEY_A) {
+            
+            break;
+        }  
+        gfxFlushBuffers();
+        gfxSwapBuffers();
+        gfxWaitForVsync();
+    }
+    
+    
+    consoleClear();
+    
+    gfxExit();
+}
+
 
 int main(int argc, char *argv[]) {
     bool sgb = false;
@@ -16,72 +109,31 @@ int main(int argc, char *argv[]) {
     bool cpu_trace = false;
     bool headless = false;
     bool audio = true;
-    std::string romfile = "";
+    //std::string romfile = "/switch/roms/rom.gbc";
+    char filename[100];
+    getFile(filename);
+    std::string romfile = filename;
+
     std::string fwfile  = "";
     Vect<std::string> args;
-    /*
-    args.resize(argc - 1, "");
-    for(int arg = 1; arg < argc; ++arg) {
-        args[arg-1] = std::string(argv[arg]);
-    }
-    for(size_t arg=0; arg < args.size(); ++arg) {
-        if(args[arg] == "--sgb") {
-            sgb = true;
-            printf("Option: Set Super Gameboy mode, if possible.\n");
-        }
-        else if(args[arg] == "--cgb" || args[arg] == "--gbc") {
-            cgb = true;
-            printf("Option: Set Color Gameboy mode, if possible.\n");
-        }
-        else if(args[arg] == "--trace") {
-            cpu_trace = true;
-            printf("Option: Activate CPU instruction trace\n");
-        }
-        else if(args[arg] == "--headless") {
-            headless = true;
-            printf("Option: Headless mode (graphics disabled)\n");
-        }
-        else if(args[arg] == "--nosound") {
-            audio = false;
-            printf("Option: NoSound mode (audio disabled)\n");
-        }
-        else if(args[arg] == "--fw") {
-            if(arg + 1 < args.size()) {
-                fwfile = args[arg+1];
-                arg++;
-                printf("Option: Firmware set to %s\n", fwfile.c_str());
-            }
-            else {
-                printf("Option --fw requires an argument.\n");
-                return 1;
-            }
-        }
-        else if(romfile == "" && args[arg][0] != '-') {
-                romfile = args[arg];
-        }
-    }*/
 
+    SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER|SDL_INIT_AUDIO);
 
-    romfile = "/switch/roms/rom.gbc";
-    sgb = false;
-    audio = true;
+    //consoleInit(NULL);
+    
+    consoleDebugInit(debugDevice_NULL);
+
+    stdout = stderr;
+
 
     if(romfile == "") {
         usage(argv);
         return 1;
     }
 
-    std::cout<<"Passing in rom file name of "<<romfile<<" and fw file name of "<<fwfile<<std::endl;
+    //std::cout<<"Passing in rom file name of "<<romfile<<" and fw file name of "<<fwfile<<std::endl;
 
-/*    Uint32 sdl_init_flags = SDL_INIT_EVERYTHING|SDL_INIT_JOYSTICK|SDL_INIT_GAMECONTROLLER;
-    if(headless) sdl_init_flags &= (~SDL_INIT_VIDEO);
-    if(!audio)   sdl_init_flags &= (~SDL_INIT_AUDIO);
-    if(SDL_Init(sdl_init_flags) < 0 ) {
-        fprintf(stderr,"Couldn't initialize SDL: %s\n--nosound would disable audio, --headless would disable video. Those might be worth a try, depending on the above error message.\n", SDL_GetError());
-    }
-*/
-    SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER|SDL_INIT_AUDIO);
-    consoleInit(NULL);
+
     romfsInit();
 
 
@@ -136,7 +188,9 @@ int main(int argc, char *argv[]) {
 
     uint64_t cycle_offset = 0;
     uint64_t start = SDL_GetTicks();
+    
     while(continue_running && appletMainLoop()) {
+
         //printf("Running CPU and PPU until cycle %ld (%ld for CPU)\n", cycle+tick_size, 2*(cycle+tick_size));
         continue_running = util::process_events(&proc, &bus);
         uint64_t count = proc.run(cycle + tick_size);
